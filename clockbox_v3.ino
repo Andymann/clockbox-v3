@@ -1,18 +1,6 @@
 /*
-
-    BREAKING CHANGE: use Hardware Serial
-
-    Select between incoming clock from DIN or USB or to react on START and STOP only without sync via CLOCK
-    button2 2.2.4
-
-    Bei Clocks mit 2 Presetbuttons gibt es ein Problem beim Sync mit externer Clock und NudgePlus, bzw NudgeMinus
-
-    DJ Mode
-
-    ToDO: Documentation for incoming midiclock (in via usb, out via ?)
-          why uclock AND taptempo? => uClock.tap() ist noch nicht implementiert
-
-    2Do 29.01.26: RESET MODE
+  ClockBox v3 — MIDI clock firmware
+  https://socialmidi.com | https://github.com/Andymann/clockbox-v3
 */
 
 #include <light_CD74HC4067.h>
