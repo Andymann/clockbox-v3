@@ -10,7 +10,7 @@ Fix bug: Double-clicking TAP button set tempo to 240 BPM.
 Fix bug: Preset buttons did not work on first press.
 
 ## v3.51
-Alle brightness settings for LEDs.
+Add brightness settings for LEDs.
 
 ## v3.50
 Make LED 5 blink on incoming MIDI data.
