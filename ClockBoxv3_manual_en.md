@@ -205,9 +205,11 @@ The value is saved to internal memory and recalled upon startup.
 
 ### When to Update
 
-Update the firmware to access new features or bug fixes. Two options are available:
+Visit this link to check if updates are available: [https://github.com/Andymann/clockbox-v3/blob/main/changelog.md](https://github.com/Andymann/clockbox-v3/blob/main/changelog.md).  
+  
+Two options for a frimware update exist:
 
-- **Build from source** — compile the `.ino` file from the GitHub repository
+- **Build from source** — compile the `.ino` file from the GitHub repository. Make sure to use the libraries that are provided with this repository.
 - **Flash a prebuilt firmware** — use the one-line script below
 
 The script downloads all required binaries, locates the ClockBox, and flashes the firmware. The device resets automatically when complete.
@@ -230,7 +232,10 @@ Open a terminal and run the command for your target firmware version.
 
 **macOS — Firmware v3.48**
 
-    curl -L https://raw.githubusercontent.com/Andymann/Arduino_ClockBox_v3/refs/heads/main/scripts/upload_clockboxv3-3.48_MAC.sh | bash
+    curl -L https://raw.githubusercontent.com/Andymann/clockbox_v3/refs/heads/main/scripts/upload_clockboxv3-3.48_MAC.sh | bash
+
+**Win11 — t.b.d.**
+
 
 
 After uploading, power-cycle the device normally.
