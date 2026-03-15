@@ -301,5 +301,6 @@ Find sourcecode, diagrams, etc at [https://github.com/Andymann/clockbox-v3](http
 | 0.9 | add declaration of conformity |
 | 1.0 | finetune views and descriptions |
 | 1.1 | remove reset-procedure |
+| 1.2 | add instructions for firmware update |
 
 ---
