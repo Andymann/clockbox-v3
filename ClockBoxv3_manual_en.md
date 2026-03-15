@@ -204,7 +204,13 @@ The value is saved to internal memory and recalled upon startup.
 ## Firmware Update
 
 ### When to Update
-Update the firmware to access new features or bug fixes published at socialmidi.com.
+
+Update the firmware to access new features or bug fixes. Two options are available:
+
+- **Build from source** — compile the `.ino` file from the GitHub repository
+- **Flash a prebuilt firmware** — use the one-line script below
+
+The script downloads all required binaries, locates the ClockBox, and flashes the firmware. The device resets automatically when complete.
 
 <img src="images/display/screen_update_mode.jpg" width="300">
 
@@ -213,10 +219,19 @@ Update the firmware to access new features or bug fixes published at socialmidi.
 1. Power off the ClockBox.
 2. Hold the **STOP** button.
 3. Connect the ClockBox v3 to your computer.
-4. Release the buttons.
-4. The 4 top LEDs turn **red** and the display shows "UpdateMode".
+4. Release the button.
+5. The 4 top LEDs turn **red** and the display shows "UpdateMode".
 
 The device is now ready to receive a new firmware upload. MIDI output is silenced during this mode.
+
+### Flashing a Prebuilt Firmware
+
+Open a terminal and run the command for your target firmware version.
+
+**macOS — Firmware v3.48**
+
+    curl -L https://raw.githubusercontent.com/Andymann/Arduino_ClockBox_v3/refs/heads/main/scripts/upload_clockboxv3-3.48_MAC.sh | bash
+
 
 After uploading, power-cycle the device normally.
 
