@@ -284,11 +284,6 @@ void setup() {
     return;
   }
 
-  if ((muxValue[STOPBUTTON] == 1) && (muxValue[TAPBUTTON] == 1)) {
-    EEPROM.update(MEMLOC_MODE, byte(CLOCKMODE_STANDALONE_A));
-    showModeResetInfo(2000);
-  }
-
   showInfo(2000);
   clearDisplay();
   ledOff();
@@ -1380,14 +1375,6 @@ void nudgeMinus(bool pOnOff) {
 }
 
 
-void showModeResetInfo(int pMS) {
-#ifdef DISPLAY_128x64
-  showModeResetInfo_128x64(pMS);
-#endif
-
-}
-
-
 #ifdef DISPLAY_128x64
 
 void showInfo_128x64(int pWaitMS) {
@@ -1559,14 +1546,4 @@ void showUpdateInfo_128x64() {
   i2cDisplay.println("   UpdateMode");
 }
 
-void showModeResetInfo_128x64(int pMS) {
-  i2cDisplay.setFont(ZevvPeep8x16);
-  i2cDisplay.clear();
-  i2cDisplay.set2X();
-  i2cDisplay.println("ClockBox");
-  i2cDisplay.set1X();
-  i2cDisplay.println();
-  i2cDisplay.println("ClockMode reset");
-  delay(pMS);
-}
 #endif
