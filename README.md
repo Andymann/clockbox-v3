@@ -1,50 +1,281 @@
-# Arduino_ClockBox_v3<br>
-<br>
-Various revisions of hardware are reflected in different branches to accomodate for different
-pinlayouts etc.
+<img src="images/ClockBoxV3/yellow_front_1.png" width="400">
 
-## Operational Modes  
-The ClockBox v3 supports different modes of operation. The selected mode is shown in the lower half of the Display. The mode can be selected by pressing down the rotary encoder and hitting the green ("start") button. The selected mode is saved automatically and will be restored at next power-on.  
-### Mode: QRS Start ("QuantizedReStart - Start")
-This mode is intended for running the ClockBox as the single source of Midi-clock-data. It sends out clock pulses according to the value shown in the display. When you are doing a quantized restart- i.e. hitting the PLAY-button when the clock is already running- it will send out another CLOCK START impulse on the next first downbeat. This allows devices to be 'pulled into' a running session without you having to worry about hitting a button in the right moment.
-  
-<img src="images/mode_qrs_start.jpg" width="400">  
-  
-### Mode: QRS Stop-Start ("QuantizedReStart - Stop Start")
-This mode is intended for running the ClockBox as the single source of Midi-clock-data. It sends out clock pulses according to the value shown in the display. When you are doing a quantized restart - i.e. hitting the PLAY-button when the clock is already running it will send out a CLOCK STOP impulse followed by a CLOCK START impulse on the next first downbeat. This allows for devices like the SP404 Mk2 do be pulled into a running session without having to stop the clock manually.  
-  
-<img src="images/mode_qrs_stopstart.jpg" width="400">  
-  
-### Mode: ext.Clk DIN 24
-This mode puts the clock into follower-mode. it waits for clock-impulses (24 PPQN) on the TRS input on the back side of the box to automatically adopt to the incoming bpm. Incoming clock pulses are indicated by the 4th LED lighting up accordingly. Clock Data will be sent out via all midi-out ports as well as USB. The box will start sending out midi data when a MIDI START is received. the box will stop on an incoming MIDI STOP pulse.  
-  
+## Intro
+Welcome to the wonderful world of tempo-syncing devices via MIDI. If you came here you probably tried to sync your DAW with a drum computer, a synthesizer, or something else and realized that this topic DOES have its quirks. MIDI clock synchronization can be tricky, and timing issues, jitter, or drifting devices are commonly known problems.
 
-<img src="images/mode_ext_din.jpg" width="400">
-<img src="images/clockbox_midi_in.gif" width="400">  
-  
-### Mode: ext.Clk USB 24
-This mode puts the clock into follower-mode. it waits for clock-impulses (24 PPQN) on the USB input of the box. When clock impulses are received the bpm settings will automatically adopt to the incoming bpm. Incoming clock pulses are indicated by the 4th LED lighting up accordingly. Clock Data will be sent out via all midi-out ports but NOT via USB. The box will start sending out midi data when a MIDI START is received. the box will stop on an incoming MIDI STOP pulse.  
-  
-<img src="images/mode_ext_usb.jpg" width="400"> 
-  
-### Mode: ext. StartStop
-This mode puts the clock into follower-mode. It ONLY reacts to incoming MIDI START or MIDI STOP messages. The BPM of the ClockBox is not affected by incoming pulses and has to set manually.  
-  
-<img src="images/mode_ext_stopstart.jpg" width="400"> 
+We have encountered virtually every single one of these issues ourselves. That experience led us to develop the **ClockBox v3**—a dedicated hardware solution designed to make MIDI clock synchronization stable, predictable, and stress-free.
 
-## Rewiring to Hardware Serial  
-Boards of revision 202401001 are layed out to use SoftwareSerial. However, early stages of developments revealed that using the built-in hardware serial interface of the µController leads to better results, especially in conjunction with incoming clock pulses.  
-  
+With ClockBox v3, syncing is no longer a problem.
 
-### Cutting the existing traces
-First cut the trace that provides midi input. If done correctly then there should be NO connection between pin 6 of the optocoupler 6N138 (labeled 'U3') and pin D16 (which is pin number 14) on the Arduino.
-![Cutting the trace for Midi IN .](https://github.com/Andymann/Arduino_ClockBox_v3/blob/main/images/image_1.jpg?raw=true)  
+[https://socialmidi.com](https://socialmidi.com/)
+
+## Features
+- 6 MIDI outputs (TRS, Type A)
+- 1 MIDI input (TRS, Type A)
+- 1 MIDI IN / OUT via USB
+- CV/Gate sync output
+- 3 tempo presets with optional smooth fade
+- Quantized Restart (QRS)
+- 4 clock modes (2 standalone / 2 follow-mode)
+- Open source
+
+---
+
+## Hardware
+
+### Top panel
+<img src="images/ClockBoxV3/yellow_top_1.png" width="400">
+
+**Controls:**
+
+| Label | Function |
+|---|---|
+| TAP | Tap tempo |
+| PLAY (START) | Start / Quantized Restart |
+| STOP | Stop |
+| PRESET 1 / 2 / 3 | Recall or save BPM presets |
+| ENCODER | Adjust BPM / navigate settings |
+| Display | Shows BPM and mode info |
+| LEDs (×5) | Beat and status indicators |
+
+### Front panel
+The front panel provides three I/O connections: **CV Start**, **CV Clock**, and **MIDI IN** (TRS). CV outputs carry 5V logic-level; MIDI IN accepts standard TRS MIDI (Type A).  
+<img src="images/ClockBoxV3/yellow_front_1.png" width="400">
+
+### Rear panel
+The rear panel exposes six independent **MIDI OUT** ports (TRS) and a **USB** port for MIDI communication and firmware updates. All MIDI OUT ports transmit the same clock signal simultaneously.  
+<img src="images/ClockBoxV3/yellow_back_1.png" width="400">
+
+### Bottom panel
+The bottom panel carries a labelled silkscreen identifying all I/O connections.  
+<img src="images/ClockBoxV3/yellow_bottom_1.png" width="400">
+
+---
+
+## Basic Usage
+
+The ClockBox v3 can run standalone or connected to a computer. Apply power via USB and you are good to go. When powered on, the currently installed firmware version is being displayed for 2 seconds.
+
+By default the device is set to **QRS Stop Start** mode — the go-to mode for most setups. Connect your MIDI devices and press PLAY. Everything will be in sync.
+
+### Set the Tempo
+
+- **TAP button** — tap repeatedly (4+ taps) to set BPM by feel
+- **Encoder (turn)** — adjust BPM ±1 per click
+- **Encoder (hold + turn)** — adjust BPM ±5 per click
+- **Preset buttons (short press)** — instantly jump to a saved BPM value
+- **Preset buttons (long press, ≥1 second)** — smoothly fade to the saved BPM value
+
+### Save a Tempo Preset
+
+Hold the **encoder button** and click **PRESET 1**, **2**, or **3**. The LEDs flash red to confirm the new value has been saved.
+
+Three preset slots are available. Each stores a single BPM value.
+
+### QRS: Quantized Restart
+
+**Just hit PLAY while the clock is running to re-sync everything.**
+
+Over time, individual devices can drift out of sync even when connected to the same clock source. Quantized Restart (QRS) fixes this without stopping the music. When you press PLAY while the clock is running, the LEDs change colour to indicate QRS is armed. With the next downbeat (beat #1), all connected devices receive an optional MIDI Stop and a Start signal and automatically snap back to the correct position (See **QRS Stop Start** and **QRS Start** under **Advanced usage**).
+
+---
+
+## LED Indicators
+
+| Colour | Meaning |
+|---|---|
+| Cyan (all) | Power-on initialization |
+| Green (LED 1-4) | Beat 1 of the current measure (playing) |
+| Blue (LEDs 2–4) | Beats 2, 3, 4 of the measure (playing) |
+| Purple / Magenta | Quantized Restart queued — waiting for next downbeat |
+| Yellow (LED 5) | incoming MIDI Clock (Follow Clock from DIN MIDI and Follow Clock from USB MIDI) |
+| Red (all) | Saving to memory, or Firmware Update Mode |
+| Off | Clock stopped |
+
+---
+
+## Display
+
+| Display content | When shown |
+|---|---|
+| Large BPM number | Standalone modes (A or B) |
+| "QRS Start" (bottom bar) | Standalone mode, Quantized Restart only sends MIDI Start |
+| "QRS Stop Start" (bottom bar) | Standalone mode, Quantized Restart only sends MIDI Stop AND Start  |
+| "Follow Clock from DIN Midi" | Follow DIN mode |
+| "Follow Clock from USB Midi" | Follow USB mode |
+| Beat blink indicator (top-right) | Every quarter note pulse |
+| "QRS Offset (PPQN): N" | While editing QRS Offset |
+| "Clock Divider: /N" | While editing Clock Divider |
+
+---
+
+## Advanced Usage
+
+### Modes
+
+The ClockBox v3 has four modes that determine how it generates or reacts to a clock signal. The active mode is shown at the bottom of the display and is saved automatically.
+
+#### QRS Stop Start *(default)*
+<img src="images/display/screen_qrs_stopstart.jpg" width="300">
   
-Secondly, cut the trace that provides midi output as shown in the picture. If done correctly then there should be NO connection between pin 2 of U2 ( 74LS241 )and pin A3 (pin number 20) of the on the Arduino. Note that on the IC labeled 'U2' the pins 2, 4, 6, 8, 11, 13, 15 and 17 are all bridged.
-![Cutting the trace for Midi OUT .](https://github.com/Andymann/Arduino_ClockBox_v3/blob/main/images/image_2.jpg?raw=true)  
-  
-Now connect pin 1 (Tx) of the Arduino to pin 2 of IC labeled 'U2' (you can also connect pin 1 to pin 4, 6, 8, 11, 15 or 17 of U2, see above).  
-Connect pin 2 (Rx) of the Arduino to pin 6 of the optocoupler 6N138
-![Rewiring 74LS241.](https://github.com/Andymann/Arduino_ClockBox_v3/blob/main/images/image_4.jpg?raw=true)
-  
-![Rewiring 6N138.](https://github.com/Andymann/Arduino_ClockBox_v3/blob/main/images/image_5.jpg?raw=true)
+The ClockBox acts as the master clock. When Quantized Restart is triggered (PLAY while running), it sends **MIDI Stop** slightly before the downbeat, then **MIDI Start** exactly on beat 1. This mode covers probably ~90% of all setups.
+
+#### QRS Start
+<img src="images/display/screen_qrs_start.jpg" width="300">
+
+The ClockBox acts as the master clock. Quantized Restart only sends a **MIDI Start** on the next downbeat — no Stop message.
+
+#### Follow Clock from DIN MIDI
+<img src="images/display/screen_follow_din.jpg" width="300">
+
+The ClockBox receives a 24 PPQN MIDI clock signal on the **MIDI IN** (TRS, Type A) jack and forwards it to all outputs (6 TRS MIDI OUT + USB). BPM is not displayed in this mode to keep the clock pass-through as tight as possible. The internal clock generator is bypassed. 
+
+#### Follow Clock from USB MIDI
+<img src="images/display/screen_follow_usb.jpg" width="300">
+
+Same as above, but the clock source is **USB MIDI** instead of TRS. Incoming clock data are forwarded to the TRS MIDI outputs.
+
+Both follow modes also for Qunatized Restart to be triggered. 
+
+### Changing the Mode
+
+**Hold ENCODER + press PLAY (START)** → cycles to the next mode:
+
+> QRS Stop Start → QRS Start → Follow DIN → Follow USB → ...
+
+The new mode appears on the display and is saved immediately.
+
+### QRS Offset Fine-Tuning
+
+In QRS Stop Start mode, you can adjust the timing gap between the MIDI Stop and MIDI Start messages.
+
+<img src="images/display/screen_qrs_offset.jpg" width="300">
+
+**Enter:** Hold **ENCODER + press STOP**
+**Adjust:** Turn encoder (range: 1–24 PPQN ticks)
+**Save & exit:** Release both buttons — LEDs flash red to confirm
+
+- **Value 1**: Stop is sent very close to beat 1 (tightest)
+- **Value 24**: Stop is sent 24 PPQGN ticks (beat 4) ahead of the next downbeat
+- **Recommended: 2** — tested sweet spot with Ableton and most hardware
+
+The value is saved to internal memory and recalled upon startup.
+
+---
+
+## CV/Gate Sync Output
+
+The front-panel CV/Gate jack outputs a tempo pulse that can trigger Eurorack sequencers, drum machines, and other modular gear.
+
+- Signal is only active **while the clock is playing**
+- Pulse rate is determined by the **Clock Divider** setting
+
+### Clock Divider
+
+Divides the CV/Gate output rate relative to the master clock.
+
+<img src="images/display/screen_clock_divider.jpg" width="300">
+
+
+**Enter:** Hold **ENCODER + press TAP**
+**Adjust:** Turn encoder
+**Save & exit:** Release both buttons — LEDs flash red to confirm
+
+Available divisions: **/1, /2, /4, /8, /16, /32, /64**
+Default: /1 (one pulse per 24th note; i.e., the raw 24 PPQN rate)
+
+---
+
+### LED Brightness
+
+Adjusts the brightness of the five LEDs.
+
+<img src="images/display/screen_led_brightness.jpg" width="300">
+
+**Enter:** Hold **PLAY (START) + STOP** while the deviceis powered on. (encoder button must not be held)
+**Adjust:** Turn encoder (±10 per click), range: 10–200
+**Save & exit:** Release both buttons — LEDs flash red to confirm
+
+The value is saved to internal memory and recalled upon startup.
+
+---
+
+## Reset the Device
+
+**Reset clock mode to default (Standalone, QRS Stop Start):**
+Power off, hold **STOP + TAP**, power on. The display shows "ClockMode reset" and the device boots into its default standalone mode. All user-configurable settings are reset as well.
+
+---
+
+## Firmware Update
+
+### When to Update
+Update the firmware to access new features or bug fixes published at socialmidi.com.
+
+<img src="images/display/screen_update_mode.jpg" width="300">
+
+### Entering Update Mode
+
+1. Power off the ClockBox.
+2. Hold the **STOP** button.
+3. Connect the ClockBox v3 to your computer.
+4. Release the buttons.
+4. The 4 top LEDs turn **red** and the display shows "UpdateMode".
+
+The device is now ready to receive a new firmware upload. MIDI output is silenced during this mode.
+
+After uploading, power-cycle the device normally.
+
+---
+
+## MIDI Clock Behaviour
+
+In Standalone modes, MIDI clock ticks (byte `0xF8`) are sent **continuously** — even when the transport is stopped. This allows for connected hard- and software to adapt to incoming clock. 
+Clock is sent simultaneously on:
+- All TRS MIDI outputs (hardware serial, 31250 baud)
+- USB MIDI
+
+In Follow modes, clock bytes are passed through immediately with no buffering to keep jitter as low as possible.
+
+---
+
+## Saved Settings (EEPROM)
+
+All settings persist through power cycles.
+
+| Setting | Default |
+|---|---|
+| Preset 1 BPM | 80 |
+| Preset 2 BPM | 100 |
+| Preset 3 BPM | 120 |
+| Clock Mode | QRS Stop Start |
+| QRS Offset | 1 |
+| Clock Divider | /1 |
+| LED Brightness | 50 |
+
+---
+
+## Declaration of conformity
+<img src="images/ce_logo.png" width="60" align="left" style="margin-right: 12px; margin-bottom: 4px">
+It is hereby confirmed, that the ClockBox v3 meets all rules
+and regulations regarding EU-directive 2004/108/EG for
+electromagnetic compliance to protect humans and the
+environment.  
+<br/>
+<br/>
+<br/>
+<br/>
+<img src="images/rohs_logo.png" width="60" align="left" style="margin-right: 12px; margin-bottom: 4px">
+ClockBox v3 is compliant with the RoHS directive.
+<br/>
+<br/>
+<br/>
+<br/>
+<img src="images/weee_symbol.png" width="60" align="left" style="margin-right: 12px; margin-bottom: 4px">
+If you wish to dispose your ClockBox v3, please contact your
+local dealer for recycling. Do not put it in your household
+waste.  
+<br/>
+<br/>
+<br/>
+<br/>
