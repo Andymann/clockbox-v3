@@ -254,28 +254,3 @@ All settings persist through power cycles.
 | LED Brightness | 50 |
 
 ---
-
-## Declaration of conformity
-<img src="images/ce_logo.png" width="60" align="left" style="margin-right: 12px; margin-bottom: 4px">
-It is hereby confirmed, that the ClockBox v3 meets all rules
-and regulations regarding EU-directive 2004/108/EG for
-electromagnetic compliance to protect humans and the
-environment.  
-<br/>
-<br/>
-<br/>
-<br/>
-<img src="images/rohs_logo.png" width="60" align="left" style="margin-right: 12px; margin-bottom: 4px">
-ClockBox v3 is compliant with the RoHS directive.
-<br/>
-<br/>
-<br/>
-<br/>
-<img src="images/weee_symbol.png" width="60" align="left" style="margin-right: 12px; margin-bottom: 4px">
-If you wish to dispose your ClockBox v3, please contact your
-local dealer for recycling. Do not put it in your household
-waste.  
-<br/>
-<br/>
-<br/>
-<br/>
