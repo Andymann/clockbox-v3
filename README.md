@@ -200,12 +200,6 @@ The value is saved to internal memory and recalled upon startup.
 
 ---
 
-## Reset the Device
-
-**Reset clock mode to default (Standalone, QRS Stop Start):**
-Power off, hold **STOP + TAP**, power on. The display shows "ClockMode reset" and the device boots into its default standalone mode. All user-configurable settings are reset as well.
-
----
 
 ## Firmware Update
 
