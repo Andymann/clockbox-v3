@@ -7,7 +7,7 @@ Fix bug: Fading from 130 to 90 BPM left the clock being stuck at 91 BPM.
 Fix bug: Double-clicking TAP button set tempo to 240 BPM.
 
 ## v3.52
-Fix bug: Preset buttony did not work on first press.
+Fix bug: Preset buttons did not work on first press.
 
 ## v3.51
 Alle brightness settings for LEDs.
