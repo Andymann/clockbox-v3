@@ -1,5 +1,8 @@
 This is the changelog of the clockbox v3. Official version started at version 3.47 so don't worry to find little to no information prior to this.
 
+## v3.55
+Improve encoder behaviour
+
 ## v3.54
 Fix bug: Fading from 130 to 90 BPM left the clock being stuck at 91 BPM.
 
