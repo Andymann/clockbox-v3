@@ -27,6 +27,12 @@
 
 #define DISPLAY_128x64
 
+/*
+  Encoder resolution: counts per output step (lower = finer).
+  2 = half quadrature cycle per step; 4 = full cycle; 1 = maximum resolution.
+*/
+#define ENCODER_THRESHOLD 2
+
 
 #ifdef DISPLAY_128x64
 #include "SSD1306Ascii.h"
@@ -105,7 +111,7 @@ bool bWaitSyncStop_old = false;
 
 
 
-#define VERSION "3.54"
+#define VERSION "3.55"
 #define DEMUX_PIN A0
 
 #define SYNC_TX_PIN A2
@@ -167,10 +173,8 @@ uint8_t DISPLAYUPDATE_BLINKER_OFF = 3;
 uint8_t DISPLAYUPDATE_BPM = 4;
 uint8_t iUpdateDisplayMode = DISPLAYUPDATE_NONE;
 
-bool encoder0PinALast = false;
-bool encoder0PinBLast = false;
-uint8_t encoder0Pos = 128;
-uint8_t encoder0PosOld = 128;
+uint8_t encoder0State = 0;  // 2-bit: bit0=A, bit1=B
+int8_t  encoder0Accum = 0;  // quadrature accumulator
 
 bool bFadePreset = true;
 
@@ -1275,35 +1279,30 @@ uint8_t getClockDividerIndexFromEeprom() {
 }
 
 // Returns -1 / +1
+// Full quadrature state-table decoder. Uses both A and B on every poll so direction
+// is determined from the state pair, not from sampling B at A's edge.
+// Invalid transitions (bouncing, missed polls) contribute 0.
 int queryEncoder() {
+  static const int8_t enc_table[16] = {
+  //  00  01  10  11  <- curr (bit0=A, bit1=B)
+      0,  1, -1,  0,  // prev=00
+     -1,  0,  0,  1,  // prev=01
+      1,  0,  0, -1,  // prev=10
+      0, -1,  1,  0   // prev=11
+  };
+
+  uint8_t currState = (muxValue[ENCODERPINA] ? 2 : 0) | (muxValue[ENCODERPINB] ? 1 : 0);
+  encoder0Accum += enc_table[(encoder0State << 2) | currState];
+  encoder0State = currState;
+
   int iReturn = 0;
-  if ((encoder0PinALast == false) && (muxValue[ENCODERPINA] == true)) {
-    if (muxValue[ENCODERPINB] == false) {
-      encoder0Pos--;
-    } else {
-      encoder0Pos++;
-    }
+  if (encoder0Accum >= ENCODER_THRESHOLD) {
+    iReturn = 1;
+    encoder0Accum -= ENCODER_THRESHOLD;
+  } else if (encoder0Accum <= -ENCODER_THRESHOLD) {
+    iReturn = -1;
+    encoder0Accum += ENCODER_THRESHOLD;
   }
-
-  if ((encoder0PinALast == true) && (muxValue[ENCODERPINA] == false)) {
-    if (muxValue[ENCODERPINB] == true) {
-      encoder0Pos--;
-    } else {
-      encoder0Pos++;
-    }
-  }
-
-  if (encoder0Pos != encoder0PosOld) {
-    if (encoder0Pos % 2 == 0) {
-      if (encoder0Pos < encoder0PosOld) {
-        iReturn = -1;
-      } else {
-        iReturn = 1;
-      }
-    }
-    encoder0PosOld = encoder0Pos;
-  }
-  encoder0PinALast = muxValue[ENCODERPINA];
   return iReturn;
 }
 
